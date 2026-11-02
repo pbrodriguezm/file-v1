@@ -7,6 +7,7 @@ Disco de archivos sobre GitHub Pages, con usuario y clave. Permite navegar carpe
 GitHub Pages no ejecuta código en el servidor y este repositorio es público, así que el acceso no depende de ocultar la pantalla. Depende del cifrado:
 
 - Los archivos y sus nombres se cifran en el navegador con AES-256-GCM antes de subirse.
+- Cada archivo cifrado se guarda como texto Base64 y, al descargarlo, vuelve a su formato original. Base64 solo cambia la representación: la protección viene del cifrado.
 - La clave de cada usuario se transforma con PBKDF2-SHA256 (600 000 iteraciones) y abre una clave maestra guardada en `users.json`. Esa clave maestra descifra los archivos y el token de GitHub.
 - La clave de usuario nunca se envía a ningún lado. El token y la clave maestra solo existen en memoria durante la sesión.
 
@@ -17,7 +18,7 @@ Límites que debes conocer:
 - Los archivos eliminados desaparecen del disco, pero siguen cifrados en el historial de Git.
 - Cambiar una clave no revoca a quien ya conocía la anterior y conserve una copia antigua de `users.json`. Para revocar a alguien hay que crear un disco nuevo y rotar el token.
 
-Cada archivo admite hasta 40 MB. GitHub recomienda no pasar de 1 GB por repositorio.
+Cada archivo admite hasta 30 MB, porque Base64 ocupa aproximadamente un 33 % más. GitHub recomienda no pasar de 1 GB por repositorio.
 
 ## Puesta en marcha
 

@@ -4,6 +4,7 @@ import {
   decryptText,
   encryptBytes,
   encryptName,
+  fromBase64,
   importMasterKey,
   nameByteLength,
   toBase64,
@@ -14,7 +15,7 @@ import {
 const API = "https://api.github.com";
 const ROOT = "files";
 const KEEP_FILE = ".keep";
-const MAX_FILE_BYTES = 40 * 1024 * 1024;
+const MAX_FILE_BYTES = 30 * 1024 * 1024;
 const MAX_NAME_BYTES = 140;
 const CIPHER_OVERHEAD = 28;
 
@@ -154,6 +155,10 @@ function formatSize(bytes) {
   return `${value.toFixed(value < 10 ? 1 : 0)} ${units[unit]}`;
 }
 
+// Cada archivo se guarda como texto Base64 del contenido cifrado.
+const originalSize = (storedBytes) =>
+  Math.max(Math.round((storedBytes * 3) / 4) - CIPHER_OVERHEAD, 0);
+
 function button(label, onClick, className = "") {
   const element = document.createElement("button");
   element.type = "button";
@@ -193,7 +198,7 @@ function renderRow(item) {
 
   const size = document.createElement("td");
   size.className = "size muted";
-  size.textContent = item.isDir ? "" : formatSize(Math.max(item.size - CIPHER_OVERHEAD, 0));
+  size.textContent = item.isDir ? "" : formatSize(originalSize(item.size));
 
   const actions = document.createElement("td");
   actions.className = "actions";
@@ -239,7 +244,8 @@ async function uploadOne(file) {
 
   const encrypted = await encryptBytes(session.key, await file.arrayBuffer());
   const stored = existing?.stored ?? (await encryptName(session.key, file.name));
-  await putFile(`${currentDir()}/${stored}`, encrypted, existing?.sha);
+  const base64Text = new TextEncoder().encode(toBase64(encrypted));
+  await putFile(`${currentDir()}/${stored}`, base64Text, existing?.sha);
   return true;
 }
 
@@ -249,21 +255,21 @@ function upload(fileList) {
   run(async () => {
     let done = 0;
     for (const [index, file] of files.entries()) {
-      setStatus(`Subiendo ${index + 1} de ${files.length}: ${file.name}`);
+      setStatus(`Convirtiendo a Base64 y subiendo ${index + 1} de ${files.length}: ${file.name}`);
       if (await uploadOne(file)) done += 1;
     }
-    setStatus(`${done} de ${files.length} archivo(s) subido(s).`);
+    setStatus(`${done} de ${files.length} archivo(s) convertido(s) a Base64 y subido(s).`);
   });
 }
 
 function download(item) {
   run(async () => {
-    setStatus(`Descargando ${item.name}`);
+    setStatus(`Descargando ${item.name} y restaurando su formato original`);
     const url = `${apiUrl(item.path)}?ref=${encodeURIComponent(session.config.branch)}`;
     const response = await github(url, {
       headers: { Accept: "application/vnd.github.raw+json" },
     });
-    const plain = await decryptBytes(session.key, await response.arrayBuffer());
+    const plain = await decryptBytes(session.key, fromBase64(await response.text()));
     // Tipo genérico: el contenido se descarga y nunca se ejecuta en este sitio.
     const link = document.createElement("a");
     link.href = URL.createObjectURL(new Blob([plain], { type: "application/octet-stream" }));

@@ -16,7 +16,10 @@ export function toBase64(bytes) {
 }
 
 export function fromBase64(text) {
-  return Uint8Array.from(atob(text), (c) => c.charCodeAt(0));
+  const binary = atob(text);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+  return bytes;
 }
 
 // Base64 apto para nombres de archivo.

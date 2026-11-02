@@ -113,6 +113,8 @@ button.link:hover:not(:disabled) { background: none; text-decoration: underline;
 
 .breadcrumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; min-width: 0; }
 
+.note { margin: 0 0 12px; font-size: 14px; }
+
 .status {
   margin: 0 0 12px;
   padding: 8px 12px;
