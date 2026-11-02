@@ -1,0 +1,12 @@
+{
+  "repo": "pbrodriguezm/file-v1",
+  "branch": "data",
+  "vault": "YPXkbFFub+TgMmREelcLlaSTJ5ywhscZcRxYOC7nFvzqpfOvQLvEfKit84brKPEHJvPBRnpX50xTp3BK77ZHP0Kwz372bf6o46ivtrHusUbQGIMo+yOKBA7CxrYApNh3HHTolxf5SXmqxJrvZ4xo2wSnQdUvQMHmpQ==",
+  "users": {
+    "kqaQfn+lUt98fqdGGd4HKD+1mPkK4LB/U3PcIzdDz+I=": {
+      "salt": "r9jk5M+VQTjCWBQRMOlq/w==",
+      "iterations": 600000,
+      "wrapped": "kh9iWOfxYR1mdsNhMIFwmgTEb024vPF0tEX0Ut8ANA3ko/EBXN/xCq4Kf42lBBUx5QMMi35a5SUzdqaA"
+    }
+  }
+}
