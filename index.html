@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self' https://api.github.com; img-src 'self'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex">
+  <title>Disco web</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <main id="login-view" class="login">
+    <form id="login-form" class="card">
+      <h1>Disco web</h1>
+      <p class="muted">Ingresa para ver tus archivos.</p>
+      <label>Usuario
+        <input id="login-user" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+      </label>
+      <label>Clave
+        <input id="login-pass" type="password" autocomplete="current-password" required>
+      </label>
+      <button id="login-button" class="primary" type="submit">Entrar</button>
+      <p id="login-error" class="error" role="alert"></p>
+    </form>
+  </main>
+
+  <div id="disk-view" class="disk" hidden>
+    <header class="topbar">
+      <strong>Disco web</strong>
+      <span class="spacer"></span>
+      <span id="current-user" class="muted"></span>
+      <button id="logout" type="button">Salir</button>
+    </header>
+
+    <main class="content">
+      <div class="toolbar">
+        <nav id="breadcrumbs" class="breadcrumbs" aria-label="Ubicación"></nav>
+        <span class="spacer"></span>
+        <button id="new-folder" type="button">Nueva carpeta</button>
+        <button id="upload-button" class="primary" type="button">Subir archivos</button>
+        <input id="file-input" type="file" multiple hidden>
+      </div>
+
+      <p id="status" class="status" role="status" hidden></p>
+
+      <section id="dropzone" class="dropzone">
+        <table>
+          <thead>
+            <tr><th>Nombre</th><th class="size">Tamaño</th><th class="actions"><span class="sr-only">Acciones</span></th></tr>
+          </thead>
+          <tbody id="file-list"></tbody>
+        </table>
+        <p id="empty" class="empty" hidden>Esta carpeta está vacía. Arrastra archivos aquí para subirlos.</p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
